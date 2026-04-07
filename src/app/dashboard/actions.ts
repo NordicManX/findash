@@ -61,3 +61,74 @@ export async function deleteAccount(id: string) {
   if (error) throw new Error(error.message);
   revalidatePath('/dashboard');
 }
+
+// ... mantenha o que já existe (createAccount, updateAccount, deleteAccount) e cole isso no final:
+
+export async function createTransaction(formData: FormData) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) throw new Error('Usuário não autenticado');
+
+  const description = formData.get('description') as string;
+  const type = formData.get('type') as string; // 'income' ou 'expense'
+  const category = formData.get('category') as string;
+  const date = formData.get('date') as string;
+  const account_id = formData.get('account_id') as string;
+
+  const amountInput = formData.get('amount') as string;
+  const amount = parseFloat(amountInput.replace(',', '.')) || 0;
+
+  const { error } = await supabase.from('transactions').insert([
+    {
+      user_id: user.id,
+      account_id,
+      description,
+      type,
+      category,
+      amount,
+      date,
+    },
+  ]);
+
+  if (error) {
+    console.error('Erro ao inserir transação:', error.message);
+    throw new Error('Falha ao criar a transação.');
+  }
+
+  revalidatePath('/dashboard');
+}
+
+// ... Mantenha o que já existe e cole isto no final:
+
+export async function updateTransaction(id: string, formData: FormData) {
+  const supabase = await createClient();
+
+  const description = formData.get('description') as string;
+  const type = formData.get('type') as string;
+  const category = formData.get('category') as string;
+  const date = formData.get('date') as string;
+  const account_id = formData.get('account_id') as string;
+
+  const amountInput = formData.get('amount') as string;
+  const amount = parseFloat(amountInput.replace(',', '.')) || 0;
+
+  const { error } = await supabase
+    .from('transactions')
+    .update({ description, type, category, amount, date, account_id })
+    .eq('id', id);
+
+  if (error) throw new Error(error.message);
+  revalidatePath('/dashboard');
+}
+
+export async function deleteTransaction(id: string) {
+  const supabase = await createClient();
+
+  const { error } = await supabase.from('transactions').delete().eq('id', id);
+
+  if (error) throw new Error(error.message);
+  revalidatePath('/dashboard');
+}
