@@ -12,6 +12,7 @@ type Transaction = {
   category: string;
   date: string;
   account_id: string;
+  is_recurring?: boolean;
 };
 
 type Account = {
@@ -309,6 +310,25 @@ export function EditTransactionModal({
                     ))}
                   </select>
                 </div>
+
+                {/* --- NOVO CHECKBOX DE RECORRÊNCIA AQUI --- */}
+                <label className="flex cursor-pointer items-center gap-3 border-2 border-black bg-zinc-100 p-3 transition-colors hover:bg-yellow-100">
+                  <input
+                    type="checkbox"
+                    name="is_recurring"
+                    defaultChecked={transaction.is_recurring}
+                    className="h-5 w-5 cursor-pointer border-2 border-black accent-black"
+                  />
+                  <div className="flex flex-col">
+                    <span className="text-sm font-black text-black uppercase">
+                      🔄 Despesa Recorrente
+                    </span>
+                    <span className="text-[10px] font-bold text-zinc-600 uppercase">
+                      Se repete todo mês
+                    </span>
+                  </div>
+                </label>
+                {/* ----------------------------------------- */}
 
                 <div className="flex gap-3 pt-4">
                   <button

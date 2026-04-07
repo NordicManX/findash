@@ -249,6 +249,22 @@ export function AddTransactionModal({ accounts }: { accounts: Account[] }) {
                 </select>
               </div>
 
+              <label className="flex cursor-pointer items-center gap-3 border-2 border-black bg-zinc-100 p-3 transition-colors hover:bg-yellow-100">
+                <input
+                  type="checkbox"
+                  name="is_recurring"
+                  className="h-5 w-5 cursor-pointer border-2 border-black accent-black"
+                />
+                <div className="flex flex-col">
+                  <span className="text-sm font-black text-black uppercase">
+                    🔄 Despesa Recorrente
+                  </span>
+                  <span className="text-[10px] font-bold text-zinc-600 uppercase">
+                    Se repete todo mês
+                  </span>
+                </div>
+              </label>
+
               <button
                 type="submit"
                 disabled={loading}

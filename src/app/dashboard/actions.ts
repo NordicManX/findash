@@ -64,6 +64,8 @@ export async function deleteAccount(id: string) {
 
 // ... mantenha o que já existe (createAccount, updateAccount, deleteAccount) e cole isso no final:
 
+// Adicione a captura do is_recurring nas duas funções:
+
 export async function createTransaction(formData: FormData) {
   const supabase = await createClient();
   const {
@@ -73,10 +75,13 @@ export async function createTransaction(formData: FormData) {
   if (!user) throw new Error('Usuário não autenticado');
 
   const description = formData.get('description') as string;
-  const type = formData.get('type') as string; // 'income' ou 'expense'
+  const type = formData.get('type') as string;
   const category = formData.get('category') as string;
   const date = formData.get('date') as string;
   const account_id = formData.get('account_id') as string;
+
+  // NOVO: Captura se o checkbox foi marcado (o HTML envia 'on' quando marcado)
+  const is_recurring = formData.get('is_recurring') === 'on';
 
   const amountInput = formData.get('amount') as string;
   const amount = parseFloat(amountInput.replace(',', '.')) || 0;
@@ -90,18 +95,13 @@ export async function createTransaction(formData: FormData) {
       category,
       amount,
       date,
+      is_recurring, // Salvando no banco
     },
   ]);
 
-  if (error) {
-    console.error('Erro ao inserir transação:', error.message);
-    throw new Error('Falha ao criar a transação.');
-  }
-
+  if (error) throw new Error('Falha ao criar a transação.');
   revalidatePath('/dashboard');
 }
-
-// ... Mantenha o que já existe e cole isto no final:
 
 export async function updateTransaction(id: string, formData: FormData) {
   const supabase = await createClient();
@@ -112,12 +112,23 @@ export async function updateTransaction(id: string, formData: FormData) {
   const date = formData.get('date') as string;
   const account_id = formData.get('account_id') as string;
 
+  // NOVO: Captura se o checkbox foi marcado
+  const is_recurring = formData.get('is_recurring') === 'on';
+
   const amountInput = formData.get('amount') as string;
   const amount = parseFloat(amountInput.replace(',', '.')) || 0;
 
   const { error } = await supabase
     .from('transactions')
-    .update({ description, type, category, amount, date, account_id })
+    .update({
+      description,
+      type,
+      category,
+      amount,
+      date,
+      account_id,
+      is_recurring,
+    }) // Atualizando no banco
     .eq('id', id);
 
   if (error) throw new Error(error.message);
