@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
+import { LogoutButton } from '@/components/logout-button';
 
 export const menuItems = [
   { name: 'Início', icon: LayoutDashboard, href: '/dashboard' },
@@ -51,10 +52,7 @@ export async function Sidebar() {
       </nav>
 
       <form action={signOut} className="mt-auto border-t-4 border-black pt-6">
-        <button className="flex w-full items-center gap-3 border-2 border-black bg-red-500 p-3 font-bold text-white uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none">
-          <LogOut size={22} strokeWidth={3} />
-          Sair
-        </button>
+        <LogoutButton />
       </form>
     </aside>
   );
