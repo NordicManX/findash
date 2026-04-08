@@ -56,7 +56,7 @@ export function AddTransactionModal({ accounts }: { accounts: Account[] }) {
       <>
         <button
           onClick={() => setShowNoAccountAlert(true)}
-          className="flex w-full flex-col items-center justify-center gap-1 border-[3px] border-black bg-black p-2 text-center text-[9px] leading-tight font-black text-white uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none sm:flex-row sm:gap-2 sm:border-4 sm:px-4 sm:py-2 sm:text-sm sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+          className="flex w-full flex-col items-center justify-center gap-1 border-[3px] border-black bg-zinc-300 p-2 text-center text-[9px] leading-tight font-black text-black uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none sm:flex-row sm:gap-2 sm:border-4 sm:px-4 sm:py-2 sm:text-sm sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
         >
           <Plus size={16} strokeWidth={3} className="shrink-0 sm:h-5 sm:w-5" />
           <span>Nova Transação</span>
@@ -103,10 +103,10 @@ export function AddTransactionModal({ accounts }: { accounts: Account[] }) {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="flex w-full flex-col items-center justify-center gap-1 border-[3px] border-black bg-zinc-300 p-2 text-center text-[9px] leading-tight font-black text-black uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none sm:flex-row sm:gap-2 sm:border-4 sm:px-4 sm:py-2 sm:text-sm sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+        className="flex w-full flex-col items-center justify-center gap-1 border-[3px] border-black bg-black p-2 text-center text-[9px] leading-tight font-black text-white uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none sm:flex-row sm:gap-2 sm:border-4 sm:px-4 sm:py-2 sm:text-sm sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
       >
-        <Plus size={20} strokeWidth={3} />
-        <span className="hidden sm:inline">Nova Transação</span>
+        <Plus size={16} strokeWidth={3} className="shrink-0 sm:h-5 sm:w-5" />
+        <span>Nova Transação</span>
       </button>
 
       {isOpen && (

@@ -4,6 +4,7 @@ import { EditAccountModal } from '@/components/edit-account-modal';
 import { AddTransactionModal } from '@/components/add-transaction-modal';
 import { DashboardFilteredView } from '@/components/dashboard-filtered-view';
 import { ProcessRecurrencesButton } from '@/components/process-recurrences-button';
+import { LogoutButton } from '@/components/logout-button';
 
 type Transaction = {
   id: string;
@@ -53,14 +54,23 @@ export default async function DashboardPage() {
     <div className="mx-auto max-w-7xl space-y-8">
       {/* Header */}
       <div className="flex flex-col justify-between gap-4 border-4 border-black bg-white p-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] md:p-6 lg:flex-row lg:items-center">
-        <div>
-          <h2 className="text-2xl font-black text-black uppercase md:text-3xl">
-            Visão Geral
-          </h2>
-          <p className="text-sm font-bold text-zinc-600 md:text-base">
-            Seu império financeiro começa aqui.
-          </p>
+        {/* AQUI FOI ALTERADO: Uma div com flex e justify-between para separar o texto do botão */}
+        <div className="flex w-full items-start justify-between lg:w-auto">
+          <div>
+            <h2 className="text-2xl font-black text-black uppercase md:text-3xl">
+              Visão Geral
+            </h2>
+            <p className="text-sm font-bold text-zinc-600 md:text-base">
+              Seu império financeiro começa aqui.
+            </p>
+          </div>
+
+          {/* NOSSO BOTÃO DE SAIR ENTRA AQUI NO CANTO DIREITO! */}
+          <div className="lg:hidden">
+            <LogoutButton />
+          </div>
         </div>
+
         <div className="grid w-full grid-cols-3 gap-1 sm:flex sm:w-auto sm:justify-start sm:gap-3">
           {/* NOSSO NOVO BOTÃO DE RECORRÊNCIA AQUI! */}
           <ProcessRecurrencesButton />

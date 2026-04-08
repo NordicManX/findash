@@ -224,3 +224,11 @@ export async function processRecurrences() {
   // Atualiza a tela com os novos dados
   revalidatePath('/dashboard');
 }
+
+import { redirect } from 'next/navigation';
+
+export async function signOutUser() {
+  const supabase = await createClient(); // Usa o mesmo client que as outras funções já usam
+  await supabase.auth.signOut();
+  redirect('/login');
+}
