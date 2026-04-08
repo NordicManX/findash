@@ -177,7 +177,7 @@ export function EditAccountModal({ account }: { account: Account }) {
                 {selectedBank.id === 'outro' && (
                   <div className="space-y-1">
                     <label className="text-xs font-black text-black uppercase">
-                      Nome da Conta
+                      Nome da Instituição
                     </label>
                     <input
                       name="name"
@@ -189,18 +189,45 @@ export function EditAccountModal({ account }: { account: Account }) {
                   </div>
                 )}
 
+                {/* CORREÇÃO DO ERRO 500: O CAMPO TYPE RETORNOU */}
                 <div className="space-y-1">
-                  <label className="text-xs font-black uppercase">
-                    Saldo Atual (R$)
+                  <label className="text-xs font-black text-black uppercase">
+                    Tipo de Conta
+                  </label>
+                  <select
+                    name="type"
+                    defaultValue={account.type}
+                    required
+                    className="w-full border-2 border-black bg-white px-3 py-2 font-bold text-black transition-all outline-none focus:bg-yellow-100 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                  >
+                    <option value="Conta Corrente">Conta Corrente</option>
+                    <option value="Conta Poupança">Conta Poupança</option>
+                    <option value="Cartão de Crédito">Cartão de Crédito</option>
+                    <option value="Investimentos">Investimentos</option>
+                    <option value="Dinheiro em Espécie">
+                      Dinheiro em Espécie
+                    </option>
+                    <option value="Outro">Outro</option>
+                  </select>
+                </div>
+
+                {/* CORREÇÃO DA UX: Saldo Inicial com explicação */}
+                <div className="space-y-1">
+                  <label className="text-xs font-black text-black uppercase">
+                    Saldo Inicial (R$)
                   </label>
                   <input
                     name="balance"
                     type="number"
                     step="0.01"
-                    defaultValue={account.balance}
+                    defaultValue={Number(account.balance).toFixed(2)}
                     required
                     className="w-full border-2 border-black px-3 py-2 font-bold transition-all outline-none focus:bg-yellow-100 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
                   />
+                  <p className="pt-1 text-[10px] leading-tight font-bold text-zinc-500">
+                    Este é o valor de partida da conta. O Dashboard calcula o
+                    Saldo Atual automaticamente com base nas movimentações.
+                  </p>
                 </div>
 
                 <div className="flex gap-3 pt-4">

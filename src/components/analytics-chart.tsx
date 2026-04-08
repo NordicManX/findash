@@ -87,9 +87,10 @@ export function AnalyticsChart({
 
       <div className="h-[300px] w-full text-xs font-bold md:text-sm">
         <ResponsiveContainer width="100%" height="100%">
+          {/* 1. Mudei o 'left' de -10 para 20 para dar um respiro na esquerda */}
           <LineChart
             data={data}
-            margin={{ top: 20, right: 30, left: -10, bottom: 10 }}
+            margin={{ top: 20, right: 30, left: 20, bottom: 10 }}
           >
             <CartesianGrid
               stroke="#000"
@@ -107,6 +108,7 @@ export function AnalyticsChart({
               tickMargin={15}
             />
 
+            {/* 2. Adicionei a propriedade width={90} aqui no YAxis */}
             <YAxis
               stroke="#000"
               strokeWidth={3}
@@ -114,6 +116,7 @@ export function AnalyticsChart({
               axisLine={{ strokeWidth: 4 }}
               tickFormatter={(val) => `R$ ${val}`}
               tickMargin={10}
+              width={90}
             />
 
             <Tooltip
