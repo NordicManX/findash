@@ -3,6 +3,7 @@ import { AddAccountModal } from '@/components/add-account-modal';
 import { EditAccountModal } from '@/components/edit-account-modal';
 import { AddTransactionModal } from '@/components/add-transaction-modal';
 import { DashboardFilteredView } from '@/components/dashboard-filtered-view';
+import { ProcessRecurrencesButton } from '@/components/process-recurrences-button';
 
 type Transaction = {
   id: string;
@@ -60,7 +61,10 @@ export default async function DashboardPage() {
             Seu império financeiro começa aqui.
           </p>
         </div>
-        <div className="flex flex-wrap gap-3">
+        <div className="grid w-full grid-cols-3 gap-1 sm:flex sm:w-auto sm:justify-start sm:gap-3">
+          {/* NOSSO NOVO BOTÃO DE RECORRÊNCIA AQUI! */}
+          <ProcessRecurrencesButton />
+
           <AddTransactionModal accounts={accounts || []} />
           <AddAccountModal />
         </div>

@@ -47,6 +47,7 @@ export function AddAccountModal() {
 
       console.log('✅ 3. Conta salva com sucesso no Supabase!');
       setIsOpen(false);
+      setSelectedBank(BANKS[0]); // Reseta para o primeiro banco
     } catch (error) {
       console.error('❌ ERRO AO SALVAR:', error);
       alert(
@@ -61,10 +62,10 @@ export function AddAccountModal() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 border-4 border-black bg-blue-500 px-4 py-2 font-black text-white uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
+        className="flex w-full flex-col items-center justify-center gap-1 border-[3px] border-black bg-blue-500 p-2 text-center text-[9px] leading-tight font-black text-white uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none sm:flex-row sm:gap-2 sm:border-4 sm:px-4 sm:py-2 sm:text-sm sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
       >
-        <Plus size={20} strokeWidth={3} />
-        <span className="hidden sm:inline">Nova Conta</span>
+        <Plus size={16} strokeWidth={3} className="shrink-0 sm:h-5 sm:w-5" />
+        <span>Nova Conta</span>
       </button>
 
       {isOpen && (
@@ -140,12 +141,17 @@ export function AddAccountModal() {
                 <select
                   name="type"
                   required
+                  defaultValue="Conta Corrente"
                   className="w-full border-2 border-black bg-white px-3 py-2 font-bold transition-all outline-none focus:bg-yellow-100 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
                 >
-                  <option value="checking">Conta Corrente</option>
-                  <option value="savings">Conta Poupança</option>
-                  <option value="credit">Cartão de Crédito</option>
-                  <option value="cash">Dinheiro em Espécie</option>
+                  <option value="Conta Corrente">Conta Corrente</option>
+                  <option value="Conta Poupança">Conta Poupança</option>
+                  <option value="Cartão de Crédito">Cartão de Crédito</option>
+                  <option value="Investimentos">Investimentos</option>
+                  <option value="Dinheiro em Espécie">
+                    Dinheiro em Espécie
+                  </option>
+                  <option value="Outro">Outro</option>
                 </select>
               </div>
 
@@ -161,6 +167,10 @@ export function AddAccountModal() {
                   required
                   className="w-full border-2 border-black px-3 py-2 font-bold transition-all outline-none focus:bg-yellow-100 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
                 />
+                <p className="pt-1 text-[10px] leading-tight font-bold text-zinc-500">
+                  Para cartões de crédito, o saldo inicial deve ser 0 (ou o
+                  valor negativo da fatura já aberta).
+                </p>
               </div>
 
               <button

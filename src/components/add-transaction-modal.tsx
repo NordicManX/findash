@@ -1,7 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { X, Plus, ArrowUpCircle, ArrowDownCircle } from 'lucide-react';
+import {
+  X,
+  Plus,
+  ArrowUpCircle,
+  ArrowDownCircle,
+  AlertTriangle,
+} from 'lucide-react';
 import { createTransaction } from '@/app/dashboard/actions';
 
 type Account = {
@@ -16,6 +22,9 @@ export function AddTransactionModal({ accounts }: { accounts: Account[] }) {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [type, setType] = useState<'expense' | 'income'>('expense');
+
+  // Estado para o nosso novo Alerta Neo-Brutalista
+  const [showNoAccountAlert, setShowNoAccountAlert] = useState(false);
 
   // Estado para controlar a descrição automaticamente
   const [description, setDescription] = useState('');
@@ -41,23 +50,60 @@ export function AddTransactionModal({ accounts }: { accounts: Account[] }) {
     }
   }
 
+  // Se não tem conta, mostra o botão cinza e o NOSSO NOVO MODAL
   if (!accounts || accounts.length === 0) {
     return (
-      <button
-        onClick={() => alert('Crie pelo menos uma conta bancária primeiro!')}
-        className="flex items-center gap-2 border-4 border-black bg-zinc-300 px-4 py-2 font-black text-black uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-      >
-        <Plus size={20} strokeWidth={3} />
-        <span className="hidden sm:inline">Nova Transação</span>
-      </button>
+      <>
+        <button
+          onClick={() => setShowNoAccountAlert(true)}
+          className="flex w-full flex-col items-center justify-center gap-1 border-[3px] border-black bg-black p-2 text-center text-[9px] leading-tight font-black text-white uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none sm:flex-row sm:gap-2 sm:border-4 sm:px-4 sm:py-2 sm:text-sm sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+        >
+          <Plus size={16} strokeWidth={3} className="shrink-0 sm:h-5 sm:w-5" />
+          <span>Nova Transação</span>
+        </button>
+
+        {/* MODAL DE ALERTA NEO-BRUTALISTA */}
+        {showNoAccountAlert && (
+          <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+            <div className="animate-in zoom-in w-full max-w-sm border-4 border-black bg-white text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] duration-200">
+              <div className="flex justify-center border-b-4 border-black bg-[#FCEB00] p-6">
+                <AlertTriangle
+                  size={56}
+                  strokeWidth={3}
+                  className="text-black"
+                />
+              </div>
+              <div className="space-y-6 p-6">
+                <h3 className="text-2xl font-black tracking-tight text-black uppercase">
+                  Ação Bloqueada
+                </h3>
+                <p className="text-sm font-bold text-zinc-600">
+                  Crie pelo menos uma{' '}
+                  <span className="border-2 border-black bg-blue-500 px-1 text-white">
+                    conta bancária
+                  </span>{' '}
+                  primeiro para poder registrar suas transações!
+                </p>
+                <button
+                  onClick={() => setShowNoAccountAlert(false)}
+                  className="w-full border-4 border-black bg-black py-3 font-black text-white uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
+                >
+                  Entendi
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </>
     );
   }
 
+  // Fluxo normal (se já tem conta bancária)
   return (
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 border-4 border-black bg-black px-4 py-2 font-black text-white uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
+        className="flex w-full flex-col items-center justify-center gap-1 border-[3px] border-black bg-zinc-300 p-2 text-center text-[9px] leading-tight font-black text-black uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none sm:flex-row sm:gap-2 sm:border-4 sm:px-4 sm:py-2 sm:text-sm sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
       >
         <Plus size={20} strokeWidth={3} />
         <span className="hidden sm:inline">Nova Transação</span>
@@ -75,9 +121,9 @@ export function AddTransactionModal({ accounts }: { accounts: Account[] }) {
             >
               <h3 className="flex items-center gap-2 text-xl font-black uppercase">
                 {type === 'income' ? (
-                  <ArrowUpCircle size={24} />
+                  <ArrowUpCircle size={24} strokeWidth={3} />
                 ) : (
-                  <ArrowDownCircle size={24} />
+                  <ArrowDownCircle size={24} strokeWidth={3} />
                 )}
                 Nova Transação
               </h3>
@@ -268,7 +314,7 @@ export function AddTransactionModal({ accounts }: { accounts: Account[] }) {
               <button
                 type="submit"
                 disabled={loading}
-                className={`mt-4 w-full border-2 border-black py-3 font-black uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none disabled:opacity-50 ${
+                className={`mt-4 w-full border-4 border-black py-3 font-black uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none disabled:opacity-50 ${
                   type === 'income'
                     ? 'bg-green-400 text-black'
                     : 'bg-red-500 text-white'

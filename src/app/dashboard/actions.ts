@@ -143,3 +143,84 @@ export async function deleteTransaction(id: string) {
   if (error) throw new Error(error.message);
   revalidatePath('/dashboard');
 }
+
+export async function processRecurrences() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) throw new Error('Usuário não autenticado');
+
+  // 1. Pegamos o mês e o ano atual
+  const today = new Date();
+  const currentMonth = today.getMonth();
+  const currentYear = today.getFullYear();
+
+  // 2. Buscamos TUDO que o usuário marcou como recorrente no banco
+  const { data: recurringTransactions } = await supabase
+    .from('transactions')
+    .select('*')
+    .eq('user_id', user.id)
+    .eq('is_recurring', true);
+
+  if (!recurringTransactions) return;
+
+  // Datas limite para saber se já lançamos algo neste mês
+  const startOfMonth = new Date(currentYear, currentMonth, 1).toISOString();
+  const endOfMonth = new Date(
+    currentYear,
+    currentMonth + 1,
+    0,
+    23,
+    59,
+    59
+  ).toISOString();
+
+  // 3. Vamos olhar transação por transação
+  for (const t of recurringTransactions) {
+    const tDate = new Date(t.date);
+
+    // Se a transação que ele achou JÁ É deste mês, a gente ignora
+    if (
+      tDate.getMonth() === currentMonth &&
+      tDate.getFullYear() === currentYear
+    ) {
+      continue;
+    }
+
+    // Verifica no banco se JÁ EXISTE uma transação com o mesmo nome neste mês
+    // (A trava de segurança para não duplicar boletos!)
+    const { data: alreadyExists } = await supabase
+      .from('transactions')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('description', t.description)
+      .gte('date', startOfMonth)
+      .lte('date', endOfMonth)
+      .limit(1)
+      .single();
+
+    // 4. Se não existe, a mágica acontece: nós criamos uma nova!
+    if (!alreadyExists) {
+      // Mantém o mesmo DIA da cobrança original, mas no MÊS atual
+      const newDate = new Date(currentYear, currentMonth, tDate.getDate());
+
+      await supabase.from('transactions').insert([
+        {
+          user_id: user.id,
+          account_id: t.account_id,
+          description: t.description,
+          amount: t.amount,
+          type: t.type,
+          category: t.category,
+          is_recurring: true,
+          date: newDate.toISOString().split('T')[0], // Salva no formato YYYY-MM-DD
+        },
+      ]);
+    }
+  }
+
+  // Atualiza a tela com os novos dados
+  revalidatePath('/dashboard');
+}
